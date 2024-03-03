@@ -53,15 +53,13 @@ function addition(a, b) {
 function slower(func, seconds) {
   return function (...args) {
     console.log("Chill out, you will get you result in 5 seconds");
-    const result = func(...args);
     setTimeout(() => {
-      const delayedResult = result;
-      console.log(delayedResult);
+      const result = func(...args);
+      console.log("result:", result);
     }, seconds * 1000);
-    return delayedResult;
   };
 }
 
 let slowedAddition = slower(addition, 5);
 
-console.log(slowedAddition(2, 3));
+slowedAddition(2, 3);
