@@ -3,26 +3,26 @@
 // DOM variables
 
 let switchButton = document.querySelector(".btn");
-let textStatus = document.querySelector(".switcher-status");
+let underButtonTextStatus = document.querySelector(".switcher-status");
 
 // functions
 
 // змінює текст кнопки і фон
 
-function themeSwitcher() {
+function switchTheme() {
   if (document.body.classList.contains("dark-mode")) {
-    lightMode();
+    turnLightMode();
   } else {
-    darkMode();
+    turnDarkMode();
   }
 }
 
-function darkMode() {
+function turnDarkMode() {
   document.body.classList.add("dark-mode");
   switchButton.textContent = "Turn on";
 }
 
-function lightMode() {
+function turnLightMode() {
   document.body.classList.remove("dark-mode");
   switchButton.textContent = "Turn off";
 }
@@ -44,26 +44,32 @@ function formatDate(date) {
 
 function updateModeStatus() {
   const formattedDate = formatDate(new Date());
-  const modeStatus = document.body.classList.contains("dark-mode")
+  const currentModeStatus = document.body.classList.contains("dark-mode")
     ? "off"
     : "on";
 
-  let updatedStatusText = `Last turn ${modeStatus}: ${formattedDate}`;
-  textStatus.textContent = updatedStatusText;
+  const storedModeStatus = localStorage.getItem("mode");
+  let storedTheme = storedModeStatus ? JSON.parse(storedModeStatus).theme : null;
+  
+  if (storedTheme === null) {
+    storedTheme = currentModeStatus === "off" ? "light" : "dark";
+  } 
+    
+  const displayedTheme = storedTheme === "dark" ? "off" : "on";
+  underButtonTextStatus.textContent = `Last turn ${displayedTheme}: ${formattedDate}`;  
 
-  localStorage.setItem("updatedStatus", updatedStatusText);
+  localStorage.setItem(
+    "mode",
+    JSON.stringify({
+      theme: currentModeStatus === "off" ? "light" : "dark",
+      lastUpdatedDate: formattedDate,
+    })
+  );
 }
 
 // event listeners
 
-switchButton.addEventListener("click", function() {
-  themeSwitcher();
+switchButton.addEventListener("click", function () {
+  switchTheme();
   updateModeStatus();
-});
-
-document.addEventListener("DOMContentLoaded", function () {
-  const updatedStatusText = localStorage.getItem("updatedStatus");
-  if (updatedStatusText) {
-    textStatus.textContent = updatedStatusText;
-  }
 });
