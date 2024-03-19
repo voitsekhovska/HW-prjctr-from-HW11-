@@ -15,6 +15,7 @@ function switchTheme() {
   } else {
     turnDarkMode();
   }
+  updateModeStatus();
 }
 
 function turnDarkMode() {
@@ -49,14 +50,16 @@ function updateModeStatus() {
     : "on";
 
   const storedModeStatus = localStorage.getItem("mode");
-  let storedTheme = storedModeStatus ? JSON.parse(storedModeStatus).theme : null;
-  
+  let storedTheme = storedModeStatus
+    ? JSON.parse(storedModeStatus).theme
+    : null;
+
   if (storedTheme === null) {
-    storedTheme = currentModeStatus === "off" ? "light" : "dark";
-  } 
-    
+    storedTheme = currentModeStatus;
+  }
+
   const displayedTheme = storedTheme === "dark" ? "off" : "on";
-  underButtonTextStatus.textContent = `Last turn ${displayedTheme}: ${formattedDate}`;  
+  underButtonTextStatus.textContent = `Last turn ${displayedTheme}: ${formattedDate}`;
 
   localStorage.setItem(
     "mode",
@@ -67,9 +70,22 @@ function updateModeStatus() {
   );
 }
 
+const storedModeStatus = localStorage.getItem("mode");
+
+if (storedModeStatus !== null) {
+  const { theme, lastUpdatedDate } = JSON.parse(storedModeStatus);
+
+  if (theme === "light") {
+    turnLightMode();
+  } else {
+    turnDarkMode();
+  }
+
+  updateModeStatus();
+}
+
 // event listeners
 
 switchButton.addEventListener("click", function () {
   switchTheme();
-  updateModeStatus();
 });
