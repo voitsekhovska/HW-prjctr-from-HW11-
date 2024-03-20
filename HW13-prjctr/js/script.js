@@ -80,12 +80,11 @@ if (storedModeStatus !== null) {
   } else {
     turnDarkMode();
   }
-
-  updateModeStatus();
+  underButtonTextStatus.textContent = `Last turn ${
+    theme === "dark" ? "off" : "on"
+  }: ${lastUpdatedDate}`;
 }
 
 // event listeners
 
-switchButton.addEventListener("click", function () {
-  switchTheme();
-});
+switchButton.addEventListener("click", switchTheme);
